@@ -20,4 +20,15 @@ public class springDamper : MonoBehaviour
         Vector3 force1 = springDamperForce * normDist;
         Vector3 force2 = -force1;
     }
+
+    public void OnRenderObject()
+    {
+        GL.Begin(GL.LINES);
+        {
+            GL.Vertex3(P1.transform.position.x, P1.transform.position.y, P1.transform.position.z);
+            GL.Vertex3(P2.transform.position.x, P2.transform.position.y, P2.transform.position.z);
+            GL.Color(new Color(0, 1, 0, 1));
+        }
+        GL.End();
+    }
 }

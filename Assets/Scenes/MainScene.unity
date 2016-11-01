@@ -182,6 +182,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particlePrefab: {fileID: 1000011545878124, guid: fce097bcf1d61e347b2f3b3aeffe9f42,
     type: 2}
+  gravity: -10
+  width: 5
+  height: 5
 --- !u!4 &1303388143
 Transform:
   m_ObjectHideFlags: 0
