@@ -6,13 +6,15 @@ public class Particle : MonoBehaviour
     public Vector3 position;
     public Vector3 velocity;
     public Vector3 acceleration;
-    public Vector3 Force;
+    public Vector3 force;
+    public Vector3 gravity = new Vector3(0, -10, 0);
+    public Vector3 gravForce;
     public float mass = 3;
     public List<Particle> neighbors;
 
     void Update()
     {
-        acceleration = (1f / mass) * Force;
+        acceleration = (1f / mass) * force;
         velocity += acceleration * Time.fixedDeltaTime;
         position += velocity * Time.fixedDeltaTime;
 
@@ -22,8 +24,14 @@ public class Particle : MonoBehaviour
         }
     }
 
-    public void addForce(Vector3 force)
+    public void addGravity()
     {
-        Force += force;
+        gravForce = gravity * mass;
+        addForce(gravForce);
+    }
+
+    public void addForce(Vector3 Force)
+    {
+        force += Force;
     }
 }

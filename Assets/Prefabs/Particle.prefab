@@ -92,7 +92,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  mass: 0
+  acceleration: {x: 0, y: 0, z: 0}
+  force: {x: 0, y: 0, z: 0}
+  gravity: {x: 0, y: -10, z: 0}
+  gravForce: {x: 0, y: 0, z: 0}
+  mass: 1
+  neighbors: []
 --- !u!135 &135000011168453046
 SphereCollider:
   m_ObjectHideFlags: 1

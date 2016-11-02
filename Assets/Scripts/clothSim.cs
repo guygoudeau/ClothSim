@@ -17,14 +17,18 @@ public class clothSim : MonoBehaviour
         springDamperList = new List<springDamper>();
         spawnParticles();
         setNeighbors();
-
-        //GameObject newGameObject = new GameObject();
-        //springDamper springDam = newGameObject.AddComponent<springDamper>();
     }
 
     void Update()
     {
-        
+        foreach (Particle p in particleList)
+        {
+            p.addGravity();
+        }
+        foreach (springDamper sd in springDamperList)
+        {
+            sd.computeForce();
+        }
     }
 
     public void spawnParticles()
@@ -64,21 +68,29 @@ public class clothSim : MonoBehaviour
             if (particleNum + width < particleList.Count) // this is the ups
             {
                 p.neighbors.Add(particleList[particleNum + width]);
+                springDamper sd = new springDamper();
+                springDamperList.Add(sd);
             }
 
             if ((particleNum + 1) % width > particleNum % width) // this is the rights
             {
                 p.neighbors.Add(particleList[particleNum + 1]);
+                springDamper sd = new springDamper();
+                springDamperList.Add(sd);
             }
 
             if (particleNum + width + 1 < particleList.Count && (particleNum + 1) % width > particleNum % width) // this is the top rights
             {
                 p.neighbors.Add(particleList[particleNum + width + 1]);
+                springDamper sd = new springDamper();
+                springDamperList.Add(sd);
             }
 
             if (particleNum + width - 1 < particleList.Count && (particleNum + width - 1) % width < particleNum % width) // this is the top lefts
             {
                 p.neighbors.Add(particleList[particleNum + width - 1]);
+                springDamper sd = new springDamper();
+                springDamperList.Add(sd);
             }
 
         }
