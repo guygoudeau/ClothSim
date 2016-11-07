@@ -3,31 +3,26 @@ using System.Collections.Generic;
 
 public class Particle : MonoBehaviour
 {
-    public Vector3 position;
-    public Vector3 velocity;
-    public Vector3 acceleration;
-    public Vector3 force;
-    public Vector3 gravity = new Vector3(0, -10, 0);
-    public Vector3 gravForce;
-    public float mass = 3;
+    public Vector3 position = Vector3.zero;
+    public Vector3 velocity = Vector3.zero;
+    public Vector3 acceleration = Vector3.zero;
+    public Vector3 force = Vector3.zero;
+    public float mass;
+    public bool anchor;
     public List<Particle> neighbors;
 
-    void Update()
+    public Vector3 updateParticle()
     {
-        acceleration = (1f / mass) * force;
-        velocity += acceleration * Time.fixedDeltaTime;
-        position += velocity * Time.fixedDeltaTime;
-
         foreach(Particle p in neighbors)
         {
             Debug.DrawLine(transform.position, p.transform.position, Color.green);
         }
-    }
 
-    public void addGravity()
-    {
-        gravForce = gravity * mass;
-        addForce(gravForce);
+        acceleration = (1f / mass) * force;
+        velocity += acceleration * Time.deltaTime;
+        position += velocity * Time.deltaTime;
+
+        return position;
     }
 
     public void addForce(Vector3 Force)

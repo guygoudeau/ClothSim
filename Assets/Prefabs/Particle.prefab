@@ -94,9 +94,8 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   acceleration: {x: 0, y: 0, z: 0}
   force: {x: 0, y: 0, z: 0}
-  gravity: {x: 0, y: -10, z: 0}
-  gravForce: {x: 0, y: 0, z: 0}
   mass: 1
+  anchor: 0
   neighbors: []
 --- !u!135 &135000011168453046
 SphereCollider:
