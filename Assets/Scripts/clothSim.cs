@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class clothSim : MonoBehaviour
 {
     List<Particle> particleList;
     List<springDamper> springDamperList;
     public GameObject particlePrefab;
-    public Vector3 gravity;
     public int width;
     public int height;
+    [Range(-15, 15)]
+    public float gravity;
+    [Range(0, 100)]
     public float springConstant;
+    [Range(0, 10)]
     public float dampingFactor;
+    [Range(0, 5)]
     public float restLength;
 
     void Start()
@@ -31,8 +36,7 @@ public class clothSim : MonoBehaviour
     {
         foreach (Particle p in particleList) // apply gravity to every particle
         {
-            gravity = new Vector3(0, -10, 0) * p.mass;
-            p.force = gravity;
+            p.force = (gravity * Vector3.down) * p.mass;
         }
 
         foreach (springDamper sd in springDamperList) // compute and apply forces to every spring damper
