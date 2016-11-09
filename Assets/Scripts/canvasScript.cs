@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class canvasScript : MonoBehaviour {
 
@@ -24,5 +24,10 @@ public class canvasScript : MonoBehaviour {
         clothSim.dampingFactor = dampF.value;
         clothSim.restLength = restL.value;
         clothSim.gravity = grav.value;
+    }
+
+    public void Reload(string name)
+    {
+        SceneManager.LoadScene(name);
     }
 }
