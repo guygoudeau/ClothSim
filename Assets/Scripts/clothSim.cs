@@ -6,7 +6,9 @@ public class clothSim : MonoBehaviour
 {
     List<Particle> particleList;
     List<springDamper> springDamperList;
+    List<GameObject> lineList;
     public GameObject particlePrefab;
+    public GameObject linePrefab;
     public int width;
     public int height;
     [Range(-15, 15)]
@@ -22,6 +24,7 @@ public class clothSim : MonoBehaviour
     {
         particleList = new List<Particle>();
         springDamperList = new List<springDamper>();
+        lineList = new List<GameObject>();
 
         spawnParticles();
         setNeighborsAndDampers();
