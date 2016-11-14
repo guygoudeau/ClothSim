@@ -6,24 +6,30 @@ public class clothSim : MonoBehaviour
 {
     List<Particle> particleList;
     List<springDamper> springDamperList;
+    List<Triangle> triangleList;
     List<GameObject> lineList;
     public GameObject particlePrefab;
     public GameObject linePrefab;
     public int width;
     public int height;
-    [Range(-15, 15)]
-    public float gravity;
     [Range(0, 100)]
     public float springConstant;
     [Range(0, 10)]
     public float dampingFactor;
     [Range(0, 5)]
     public float restLength;
+    [Range(-10, 10)]
+    public float gravity;
+    [Range(-5, 5)]
+    public float airVelocity;
+    public float airDensity = 1;
+    public float dragCoefficient = 1;
 
     void Start()
     {
         particleList = new List<Particle>();
         springDamperList = new List<springDamper>();
+        triangleList = new List<Triangle>();
         lineList = new List<GameObject>();
 
         spawnParticles();
@@ -48,6 +54,11 @@ public class clothSim : MonoBehaviour
             sd.springConstant = springConstant;
             sd.restLength = restLength;
             sd.computeForce();
+        }
+
+        foreach (Triangle t in triangleList)
+        {
+            t.AeroForce(airDensity, dragCoefficient, airVelocity * Vector3.forward);
         }
 
         foreach (Particle p in particleList) // apply forward Euler integration to every particle that isn't an anchor

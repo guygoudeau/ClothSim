@@ -8,6 +8,7 @@ public class canvasScript : MonoBehaviour {
     public Slider dampF;
     public Slider restL;
     public Slider grav;
+    public Slider windS;
     public clothSim clothSim;
 	
     void Start ()
@@ -16,6 +17,7 @@ public class canvasScript : MonoBehaviour {
         dampF.value = clothSim.dampingFactor;
         restL.value = clothSim.restLength;
         grav.value = clothSim.gravity;
+        windS.value = clothSim.airVelocity;
     }
 
 	void Update ()
@@ -24,6 +26,7 @@ public class canvasScript : MonoBehaviour {
         clothSim.dampingFactor = dampF.value;
         clothSim.restLength = restL.value;
         clothSim.gravity = grav.value;
+        clothSim.airVelocity = windS.value;
     }
 
     public void Reload(string name)

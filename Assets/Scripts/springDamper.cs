@@ -5,7 +5,16 @@ public class springDamper
     public float springConstant; // Ks, force that brings it back
     public float dampingFactor; // Kd, force that limits how hard it comes back
     public float restLength; // l0, default starting length while at rest
-    public Particle P1, P2;
+    public Particle P1, P2; // Points between the spring dampers
+
+    public springDamper(Particle p1, Particle p2, float sC, float dF, float rL)
+    {
+        P1 = p1;
+        P2 = p2;
+        springConstant = sC;
+        dampingFactor = dF;
+        restLength = rL;
+    }
 
     public void computeForce()
     {
@@ -22,14 +31,5 @@ public class springDamper
 
         P1.addForce(force1);
         P2.addForce(force2);
-    }
-
-    public springDamper(Particle p1, Particle p2, float sC, float dF, float rL)
-    {
-        P1 = p1;
-        P2 = p2;
-        springConstant = sC;
-        dampingFactor = dF;
-        restLength = rL;
     }
 }
