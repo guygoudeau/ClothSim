@@ -737,9 +737,9 @@ RectTransform:
   - {fileID: 753589029}
   m_Father: {fileID: 1362734664}
   m_RootOrder: 7
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -592, y: -2}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 163, y: -3}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &507964690
@@ -1694,12 +1694,13 @@ MonoBehaviour:
   particlePrefab: {fileID: 1000011545878124, guid: fce097bcf1d61e347b2f3b3aeffe9f42,
     type: 2}
   linePrefab: {fileID: 1000013911098634, guid: 263132a86bd75424e96fc745b7162d85, type: 2}
-  width: 7
-  height: 7
-  springConstant: 40
+  lineMaterial: {fileID: 2100000, guid: 25d44887d8268f64d8706b42db2591ca, type: 2}
+  width: 8
+  height: 8
+  springConstant: 50
   dampingFactor: 3
-  restLength: 2.35
-  gravity: 6.8
+  restLength: 2
+  gravity: 5
   airVelocity: 0
   airDensity: 1
   dragCoefficient: 1
