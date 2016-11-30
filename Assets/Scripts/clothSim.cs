@@ -51,6 +51,32 @@ public class clothSim : MonoBehaviour
 
     void Update()
     {
+        updateForces();
+    }    
+
+    public void spawnParticles() // creates grid of particles
+    {
+        float xPos = 0f; // for determining position of particles on x axis 
+        float yPos = 0f; // for determining position of particles on y axis 
+
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                GameObject particle = Instantiate(particlePrefab, new Vector3(xPos, yPos, 0), new Quaternion()) as GameObject; // spawn particle prefab
+                particleList.Add(particle.GetComponent<Particle>()); // add that particle to the particle list
+                xPos += 2; // x margin of 2 between particles
+            }
+            yPos += 2; // y margin of 2 between particles
+            xPos = 0; // reset x for next loop
+        }
+
+        particleList[particleList.Count - 1].anchor = true; // set top right anchor
+        particleList[particleList.Count - width].anchor = true; // set top left anchor
+    }
+
+    public void updateForces()
+    {
         tempSpringDamperList = new List<springDamper>(); // reset the temporary line list
         foreach (springDamper sd in springDamperList) // add every spring damper in the spring damper list to temporary spring damper list
         {
@@ -110,27 +136,6 @@ public class clothSim : MonoBehaviour
             line.material = lineMaterial;
             line.SetWidth(.2f, .2f);
         }
-    }
-
-    public void spawnParticles() // creates grid of particles
-    {
-        float xPos = 0f; // for determining position of particles on x axis 
-        float yPos = 0f; // for determining position of particles on y axis 
-
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
-                GameObject particle = Instantiate(particlePrefab, new Vector3(xPos, yPos, 0), new Quaternion()) as GameObject; // spawn particle prefab
-                particleList.Add(particle.GetComponent<Particle>()); // add that particle to the particle list
-                xPos += 2; // x margin of 2 between particles
-            }
-            yPos += 2; // y margin of 2 between particles
-            xPos = 0; // reset x for next loop
-        }
-
-        particleList[particleList.Count - 1].anchor = true; // set top right anchor
-        particleList[particleList.Count - width].anchor = true; // set top left anchor
     }
 
     public void setNeighborsAndDampers()
