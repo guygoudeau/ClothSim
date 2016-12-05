@@ -26,6 +26,8 @@ public class clothSim : MonoBehaviour
     public float gravity;
     [Range(-5, 5)]
     public float airVelocity;
+    [Range(0, 5)]
+    public float breakingFactor;
     public float airDensity = 1;
     public float dragCoefficient = 1;
 
@@ -54,7 +56,7 @@ public class clothSim : MonoBehaviour
         updateForces();
     }    
 
-    public void spawnParticles() // creates grid of particles
+    public void spawnParticles() // creates grid of particles 
     {
         float xPos = 0f; // for determining position of particles on x axis 
         float yPos = 0f; // for determining position of particles on y axis 
@@ -75,7 +77,7 @@ public class clothSim : MonoBehaviour
         particleList[particleList.Count - width].anchor = true; // set top left anchor
     }
 
-    public void updateForces()
+    public void updateForces() // reset temp lists, compute and apply forces, draw lines 
     {
         tempSpringDamperList = new List<springDamper>(); // reset the temporary line list
         foreach (springDamper sd in springDamperList) // add every spring damper in the spring damper list to temporary spring damper list
@@ -138,7 +140,7 @@ public class clothSim : MonoBehaviour
         }
     }
 
-    public void setNeighborsAndDampers()
+    public void setNeighborsAndDampers() // find particle neighbors and create spring dampers and line renderers there 
     {
         foreach (Particle p in particleList) 
         {
@@ -188,7 +190,7 @@ public class clothSim : MonoBehaviour
         }
     }
 
-    public void setTriangles()
+    public void setTriangles() // create triangles for aerodynamic force 
     {
         // i = this particle
         // i + 1 = right
@@ -210,7 +212,7 @@ public class clothSim : MonoBehaviour
         }
     }
 
-    public GameObject createLineRenderers(springDamper sd)
+    public GameObject createLineRenderers(springDamper sd) // instantiate a line prefab 
     {
         GameObject lineGO = Instantiate(linePrefab, (sd.P1.position + sd.P2.position) / 2, new Quaternion()) as GameObject; // use line prefab to draw from first particle to second particle
         return lineGO;

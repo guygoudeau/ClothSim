@@ -1702,6 +1702,7 @@ MonoBehaviour:
   restLength: 2
   gravity: 5
   airVelocity: 0
+  breakingFactor: 0
   airDensity: 1
   dragCoefficient: 1
 --- !u!4 &1303388143
@@ -1908,6 +1909,7 @@ MonoBehaviour:
   restL: {fileID: 1164593638}
   grav: {fileID: 1788638636}
   windS: {fileID: 29669551}
+  breakF: {fileID: 266419325}
   clothSim: {fileID: 1303388142}
 --- !u!1 &1369251526
 GameObject:
