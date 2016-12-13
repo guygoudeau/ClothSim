@@ -19,17 +19,20 @@ namespace Assets.Scripts
         /// <summary>
         /// The first particle point of the triangle.
         /// </summary>
-        private readonly Particle p1;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Particle p1;
 
         /// <summary>
         /// The second particle point of the triangle.
         /// </summary>
-        private readonly Particle p2;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Particle p2;
 
         /// <summary>
         /// The third particle point of the triangle.
         /// </summary>
-        private readonly Particle p3;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Particle p3;
 
         /// <summary>
         /// The density of the air.
@@ -74,19 +77,19 @@ namespace Assets.Scripts
         /// <summary>
         /// The aerodynamic force.
         /// </summary>
-        private Vector3 aeroForce; 
+        private Vector3 aeroForce;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Triangle"/> class.
         /// </summary>
         /// <param name="p1">
-        /// The p 1.
+        /// The first particle point of the triangle.
         /// </param>
         /// <param name="p2">
-        /// The p 2.
+        /// The second particle point of the triangle.
         /// </param>
         /// <param name="p3">
-        /// The p 3.
+        /// The third particle point of the triangle.
         /// </param>
         public Triangle(Particle p1, Particle p2, Particle p3)
         {
@@ -96,7 +99,7 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// The aero force.
+        /// Computes aerodynamic force.
         /// </summary>
         /// <param name="density">
         /// The density.

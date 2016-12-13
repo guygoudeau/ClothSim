@@ -21,71 +21,74 @@ namespace Assets.Scripts
         /// <summary>
         /// The spring constant.
         /// </summary>
-        private readonly Slider springC;
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Slider springC;
 
         /// <summary>
         /// The damping factor.
         /// </summary>
-        private readonly Slider dampF;
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Slider dampF;
 
         /// <summary>
         /// The rest length.
         /// </summary>
-        private readonly Slider restL;
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Slider restL;
 
         /// <summary>
         /// The gravity.
         /// </summary>
-        private readonly Slider grav;
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Slider grav;
 
         /// <summary>
         /// The wind strength.
         /// </summary>
-        private readonly Slider windS;
-
-        /// <summary>
-        /// The breaking factor.
-        /// </summary>
-        private readonly Slider breakF;
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Slider windS;
 
         /// <summary>
         /// The cloth simulation instance.
         /// </summary>
-        private readonly ClothSim clothSim;
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private ClothSim clothSim;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CanvasScript"/> class.
         /// </summary>
-        /// <param name="springC">
+        /// <param name="sC">
         /// The spring constant.
         /// </param>
-        /// <param name="dampF">
+        /// <param name="dF">
         /// The damping factor.
         /// </param>
-        /// <param name="restL">
+        /// <param name="rL">
         /// The rest length.
         /// </param>
-        /// <param name="grav">
+        /// <param name="g">
         /// The gravity.
         /// </param>
-        /// <param name="windS">
+        /// <param name="wS">
         /// The wind strength.
         /// </param>
-        /// <param name="breakF">
-        /// The breaking factor.
-        /// </param>
-        /// <param name="clothSim">
+        /// <param name="cS">
         /// The cloth simulation instance.
         /// </param>
-        public CanvasScript(Slider springC, Slider dampF, Slider restL, Slider grav, Slider windS, Slider breakF, ClothSim clothSim)
+        public CanvasScript(Slider sC, Slider dF, Slider rL, Slider g, Slider wS, ClothSim cS)
         {
-            this.restL = restL;
-            this.grav = grav;
-            this.windS = windS;
-            this.breakF = breakF;
-            this.clothSim = clothSim;
-            this.dampF = dampF;
-            this.springC = springC;
+            this.restL = rL;
+            this.grav = g;
+            this.windS = wS;
+            this.clothSim = cS;
+            this.dampF = dF;
+            this.springC = sC;
         }
 
         /// <summary>
@@ -102,27 +105,27 @@ namespace Assets.Scripts
         /// <summary>
         /// Initializes starting values.
         /// </summary>
+        // ReSharper disable once UnusedMember.Local
         private void Start()
         {
-            this.springC.value = this.clothSim.springConstant;
-            this.dampF.value = this.clothSim.dampingFactor;
-            this.restL.value = this.clothSim.restLength;
-            this.grav.value = this.clothSim.gravity;
-            this.windS.value = this.clothSim.airVelocity;
-            this.breakF.value = this.clothSim.breakingFactor;
+            this.springC.value = this.clothSim.SpringConstant;
+            this.dampF.value = this.clothSim.DampingFactor;
+            this.restL.value = this.clothSim.RestLength;
+            this.grav.value = this.clothSim.Gravity;
+            this.windS.value = this.clothSim.AirVelocity;
         }
 
         /// <summary>
         /// Updates scene every frame.
         /// </summary>
+        // ReSharper disable once UnusedMember.Local
         private void Update()
         {
-            this.clothSim.springConstant = this.springC.value;
-            this.clothSim.dampingFactor = this.dampF.value;
-            this.clothSim.restLength = this.restL.value;
-            this.clothSim.gravity = this.grav.value;
-            this.clothSim.airVelocity = this.windS.value;
-            this.clothSim.breakingFactor = this.breakF.value;
+            this.clothSim.SpringConstant = this.springC.value;
+            this.clothSim.DampingFactor = this.dampF.value;
+            this.clothSim.RestLength = this.restL.value;
+            this.clothSim.Gravity = this.grav.value;
+            this.clothSim.AirVelocity = this.windS.value;
         }
     }
 }

@@ -18,38 +18,54 @@ namespace Assets.Scripts
     public class Particle : MonoBehaviour
     {
         /// <summary>
-        /// The mass.
-        /// </summary>
-        private readonly float mass;
-
-        /// <summary>
-        /// The acceleration.
-        /// </summary>
-        private Vector3 acceleration = Vector3.zero;
-
-        /// <summary>
-        /// The force.
-        /// </summary>
-        private Vector3 force = Vector3.zero;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Particle"/> class.
         /// </summary>
-        /// <param name="mass">
-        /// The mass.
+        /// <param name="m">
+        /// The particle's mass.
         /// </param>
-        /// <param name="anchor">
-        /// The anchor.
+        /// <param name="f">
+        /// The particle's force.
         /// </param>
-        /// <param name="neighbors">
-        /// The neighbors.
+        /// <param name="ac">
+        /// The particle's acceleration.
         /// </param>
-        public Particle(float mass, bool anchor, List<Particle> neighbors)
+        /// <param name="v">
+        /// The particle's velocity.
+        /// </param>
+        /// <param name="p">
+        /// The particle's position.
+        /// </param>
+        /// <param name="an">
+        /// Whether this particle is an anchor or not.
+        /// </param>
+        /// <param name="n">
+        /// The particle's list of neighbors.
+        /// </param>
+        public Particle(float m, Vector3 f, Vector3 ac, Vector3 v, Vector3 p, bool an, List<Particle> n)
         {
-            this.mass = mass;
-            this.Anchor = anchor;
-            this.Neighbors = neighbors;
+            this.Mass = m;
+            this.Force = f;
+            this.Acceleration = ac;
+            this.Velocity = v;
+            this.Position = p;
+            this.Anchor = an;
+            this.Neighbors = n;
         }
+
+        /// <summary>
+        /// Gets or sets the mass.
+        /// </summary>
+        public float Mass { get; set; }
+
+        /// <summary>
+        /// Gets or sets the force.
+        /// </summary>
+        public Vector3 Force { get; set; }
+
+        /// <summary>
+        /// Gets or sets the acceleration.
+        /// </summary>
+        public Vector3 Acceleration { get; set; }
 
         /// <summary>
         /// Gets or sets the velocity.
@@ -57,7 +73,7 @@ namespace Assets.Scripts
         public Vector3 Velocity { get; set; }
 
         /// <summary>
-        /// Gets or sets the velocity.
+        /// Gets or sets the position.
         /// </summary>
         public Vector3 Position { get; set; }
 
@@ -72,29 +88,29 @@ namespace Assets.Scripts
         public List<Particle> Neighbors { get; set; }
 
         /// <summary>
-        /// The update particle.
+        /// Updates the particle's position.
         /// </summary>
         /// <returns>
         /// The <see cref="Vector3"/>.
         /// </returns>
         public Vector3 UpdateParticle()
         {
-            this.acceleration = (1f / this.mass) * this.force;
-            this.Velocity += this.acceleration * Time.deltaTime;
+            this.Acceleration = (1f / this.Mass) * this.Force;
+            this.Velocity += this.Acceleration * Time.deltaTime;
             this.Position += this.Velocity * Time.deltaTime;
 
             return this.Position;
         }
 
         /// <summary>
-        /// The add force.
+        /// Adds two forces.
         /// </summary>
-        /// <param name="force2">
-        /// The force.
+        /// <param name="force">
+        /// The force to be added.
         /// </param>
-        public void AddForce(Vector3 force2)
+        public void AddForce(Vector3 force)
         {
-            this.force += force2;
+            this.Force += force;
         }
     }
 }

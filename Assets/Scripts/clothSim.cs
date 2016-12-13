@@ -16,146 +16,360 @@ namespace Assets.Scripts
     /// The cloth simulation class.
     /// </summary>
     public class ClothSim : MonoBehaviour
-    {
-        List<Particle> particleList;
+    { 
+        /// <summary>
+        /// The width of the particle grid.
+        /// </summary>
+        [SerializeField]
+        private const int Width = 7;
 
-        List<SpringDamper> springDamperList;
+        /// <summary>
+        /// The height of the particle grid.
+        /// </summary>
+        [SerializeField]
+        private const int Height = 7;
 
-        List<SpringDamper> tempSpringDamperList;
+        /// <summary>
+        /// The air density.
+        /// </summary>
+        private const float AirDensity = 1;
 
-        List<Triangle> triangleList;
+        /// <summary>
+        /// The drag coefficient.
+        /// </summary>
+        private const float DragCoefficient = 1;
 
-        List<Triangle> tempTriangleList;
+        /// <summary>
+        /// The particle list.
+        /// </summary>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private List<Particle> particleList;
 
-        List<GameObject> lineList;
+        /// <summary>
+        /// The spring damper list.
+        /// </summary>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private List<SpringDamper> springDamperList;
 
-        List<GameObject> tempLineList;
+        /// <summary>
+        /// The temp spring damper list.
+        /// </summary>
+        // ReSharper disable once CollectionNeverQueried.Local
+        private List<SpringDamper> tempSpringDamperList;
 
-        public GameObject particlePrefab;
+        /// <summary>
+        /// The triangle list.
+        /// </summary>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private List<Triangle> triangleList;
 
-        public GameObject linePrefab;
+        /// <summary>
+        /// The temp triangle list.
+        /// </summary>
+        // ReSharper disable once CollectionNeverQueried.Local
+        private List<Triangle> tempTriangleList;
 
-        public Material lineMaterial;
+        /// <summary>
+        /// The line list.
+        /// </summary>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private List<GameObject> lineList;
 
-        public int width;
+        /// <summary>
+        /// The temp line list.
+        /// </summary>
+        private List<GameObject> tempLineList;
 
-        public int height;
-
+        /// <summary>
+        /// The spring constant.
+        /// </summary>
         [Range(0, 100)]
-        public float springConstant;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private float springConstant;
 
+        /// <summary>
+        /// The damping factor.
+        /// </summary>
         [Range(0, 10)]
-        public float dampingFactor;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private float dampingFactor;
 
+        /// <summary>
+        /// The rest length.
+        /// </summary>
         [Range(0, 5)]
-        public float restLength;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private float restLength;
 
+        /// <summary>
+        /// The gravity.
+        /// </summary>
         [Range(-10, 10)]
-        public float gravity;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private float gravity;
 
+        /// <summary>
+        /// The air velocity.
+        /// </summary>
         [Range(-5, 5)]
-        public float airVelocity;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private float airVelocity;
 
-        [Range(0, 5)]
-        public float breakingFactor;
-
-        public float airDensity = 1;
-
-        public float dragCoefficient = 1;
-
-        void Start()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClothSim"/> class.
+        /// </summary>
+        /// <param name="sC">
+        /// The spring constant.
+        /// </param>
+        /// <param name="dF">
+        /// The damping factor.
+        /// </param>
+        /// <param name="rL">
+        /// The rest length.
+        /// </param>
+        /// <param name="g">
+        /// The gravity.
+        /// </param>
+        /// <param name="aV">
+        /// The air velocity.
+        /// </param>
+        /// <param name="pP">
+        /// The particle prefab.
+        /// </param>
+        /// <param name="lP">
+        /// The line prefab.
+        /// </param>
+        /// <param name="lM">
+        /// The line material.
+        /// </param>
+        public ClothSim(float sC, float dF, float rL, float g, float aV, GameObject pP, GameObject lP, Material lM)
         {
-            particleList = new List<Particle>();
-            springDamperList = new List<SpringDamper>();
-            tempSpringDamperList = new List<SpringDamper>();
-            triangleList = new List<Triangle>();
-            tempTriangleList = new List<Triangle>();
-            lineList = new List<GameObject>();
-            tempLineList = new List<GameObject>();
+            this.springConstant = sC;
+            this.dampingFactor = dF;
+            this.restLength = rL;
+            this.gravity = g;
+            this.airVelocity = aV;
+            this.ParticlePrefab = pP;
+            this.LinePrefab = lP;
+            this.LineMaterial = lM;
+            this.particleList = new List<Particle>();
+            this.springDamperList = new List<SpringDamper>();
+            this.tempSpringDamperList = new List<SpringDamper>();
+            this.triangleList = new List<Triangle>();
+            this.tempTriangleList = new List<Triangle>();
+            this.lineList = new List<GameObject>();
+            this.tempLineList = new List<GameObject>();
+        }
 
-            spawnParticles();
-            setNeighborsAndDampers();
-            setTriangles();
-
-            foreach (Particle p in particleList) // set starting position values for every particle
+        /// <summary>
+        /// Gets or sets the spring constant.
+        /// </summary>
+        public float SpringConstant
+        {
+            get
             {
+                return this.springConstant;
+            }
+
+            set
+            {
+                this.springConstant = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the damping factor.
+        /// </summary>
+        public float DampingFactor
+        {
+            get
+            {
+                return this.dampingFactor;
+            }
+
+            set
+            {
+                this.dampingFactor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the rest length.
+        /// </summary>
+        public float RestLength
+        {
+            get
+            {
+                return this.restLength;
+            }
+
+            set
+            {
+                this.restLength = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the gravity.
+        /// </summary>
+        public float Gravity
+        {
+            get
+            {
+                return this.gravity;
+            }
+
+            set
+            {
+                this.gravity = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the air velocity.
+        /// </summary>
+        public float AirVelocity
+        {
+            get
+            {
+                return this.airVelocity;
+            }
+
+            set
+            {
+                this.airVelocity = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the particle prefab.
+        /// </summary>
+        public GameObject ParticlePrefab { get; set; }
+
+        /// <summary>
+        /// Gets or sets the line prefab.
+        /// </summary>
+        public GameObject LinePrefab { get; set; }
+
+        /// <summary>
+        /// Gets or sets the line material.
+        /// </summary>
+        public Material LineMaterial { get; set; }
+
+        /// <summary>
+        /// Handles actions that need to happen at program start.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private void Start()
+        {
+            // ReSharper disable once UnusedVariable
+            var clothSim = new ClothSim(this.SpringConstant, this.DampingFactor, this.RestLength, this.Gravity, this.AirVelocity, this.ParticlePrefab, this.LinePrefab, this.LineMaterial);
+
+            this.SpawnParticles();
+            this.SetNeighborsAndDampers();
+            this.SetTriangles();
+
+            foreach (var p in this.particleList)
+            {
+                // set starting position values for every particle
                 p.Position = p.transform.position;
             }
         }
 
-        void Update()
+        /// <summary>
+        /// Updates actions every frame.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private void Update()
         {
-            updateForces();
+            this.UpdateForces();
         }
 
-        public void spawnParticles() // creates grid of particles 
+        /// <summary>
+        /// Creates a grid of particles.
+        /// </summary>
+        private void SpawnParticles()
         {
-            float xPos = 0f; // for determining position of particles on x axis 
-            float yPos = 0f; // for determining position of particles on y axis 
+            var xPos = 0f; // for determining position of particles on x axis 
+            var yPos = 0f; // for determining position of particles on y axis 
 
-            for (int i = 0; i < height; i++)
+            for (var i = 0; i < Height; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (var j = 0; j < Width; j++)
                 {
-                    GameObject particle =
-                            Instantiate(particlePrefab, new Vector3(xPos, yPos, 0), new Quaternion()) as GameObject;
-                        // spawn particle prefab
-                    particleList.Add(particle.GetComponent<Particle>()); // add that particle to the particle list
+                    var particle = Instantiate(this.ParticlePrefab, new Vector3(xPos, yPos, 0), new Quaternion()) as GameObject; // spawn particle prefab
+                    if (particle != null)
+                    {
+                        // add that particle to the particle list
+                        this.particleList.Add(particle.GetComponent<Particle>());  
+                    }
+
                     xPos += 2; // x margin of 2 between particles
                 }
+
                 yPos += 2; // y margin of 2 between particles
                 xPos = 0; // reset x for next loop
             }
 
-            particleList[particleList.Count - 1].anchor = true; // set top right anchor
-            particleList[particleList.Count - width].anchor = true; // set top left anchor
+            this.particleList[this.particleList.Count - 1].Anchor = true; // set top right anchor
+            this.particleList[this.particleList.Count - Width].Anchor = true; // set top left anchor
         }
 
-        public void updateForces() // reset temp lists, compute and apply forces, draw lines 
+        /// <summary>
+        /// Resets temp lists, computes and applies forces, and draw lines.
+        /// </summary>
+        private void UpdateForces() 
         {
-            tempSpringDamperList = new List<SpringDamper>(); // reset the temporary line list
-            foreach (SpringDamper sd in springDamperList)
+            this.tempSpringDamperList = new List<SpringDamper>(); // reset the temporary line list
+            foreach (var sd in this.springDamperList)
+            {
                 // add every spring damper in the spring damper list to temporary spring damper list
-            {
-                tempSpringDamperList.Add(sd);
+                this.tempSpringDamperList.Add(sd);
             }
 
-            tempTriangleList = new List<Triangle>(); // reset the temporary line list
-            foreach (Triangle t in triangleList) // add every triangle in the triangle list to temporary triangle list
+            this.tempTriangleList = new List<Triangle>(); // reset the temporary line list
+            foreach (var t in this.triangleList) 
             {
-                tempTriangleList.Add(t);
+                // add every triangle in the triangle list to temporary triangle list
+                this.tempTriangleList.Add(t);
             }
 
-            tempLineList = new List<GameObject>(); // reset the temporary line list
-            foreach (GameObject l in lineList) // add every line in the line list to temporary line list
+            this.tempLineList = new List<GameObject>(); // reset the temporary line list
+            foreach (var l in this.lineList) 
             {
-                tempLineList.Add(l);
+                // add every line in the line list to temporary line list
+                this.tempLineList.Add(l);
             }
 
-            foreach (Particle p in particleList) // apply gravity to every particle
+            foreach (var p in this.particleList) 
             {
-                p.force = (gravity * Vector3.down) * p.mass;
+                // apply gravity to every particle
+                p.Force = (this.gravity * Vector3.down) * p.Mass;
             }
 
-            foreach (SpringDamper sd in springDamperList) // compute and apply forces to every spring damper
+            foreach (var sd in this.springDamperList) 
             {
-                sd.dampingFactor = dampingFactor;
-                sd.springConstant = springConstant;
-                sd.restLength = restLength;
+                // compute and apply forces to every spring damper
+                sd.DampingFactor = this.dampingFactor;
+                sd.SpringConstant = this.springConstant;
+                sd.RestLength = this.restLength;
                 sd.ComputeForce();
             }
 
-            foreach (Triangle t in triangleList) // compute and apply aerodynamic force to every triangle
+            foreach (var t in this.triangleList) 
             {
-                if (airVelocity != 0)
+                // compute and apply aerodynamic force to every triangle
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (this.airVelocity != 0)
                 {
-                    t.AeroForce(airDensity, dragCoefficient, airVelocity * Vector3.forward);
+                    t.AeroForce(AirDensity, DragCoefficient, this.airVelocity * Vector3.forward);
                 }
             }
 
-            foreach (Particle p in particleList) // update the position of every particle that isn't an anchor
+            foreach (var p in this.particleList) 
             {
-                if (p.anchor == false)
+                // update the position of every particle that isn't an anchor
+                if (p.Anchor == false)
                 {
                     p.transform.position = p.UpdateParticle();
                 }
@@ -165,119 +379,117 @@ namespace Assets.Scripts
                 }
             }
 
-            for (int i = 0; i < tempLineList.Count; i++) // set line positions, material and width
+            for (var i = 0; i < this.tempLineList.Count; i++) 
             {
-                LineRenderer line = tempLineList[i].GetComponent<LineRenderer>();
-                line.SetPosition(0, springDamperList[i].P1.Position);
-                line.SetPosition(1, springDamperList[i].P2.Position);
-                line.material = lineMaterial;
+                // set line positions, material and width
+                var line = this.tempLineList[i].GetComponent<LineRenderer>();
+                line.SetPosition(0, this.springDamperList[i].P1.Position);
+                line.SetPosition(1, this.springDamperList[i].P2.Position);
+                line.material = this.LineMaterial;
                 line.SetWidth(.2f, .2f);
             }
         }
 
-        public void setNeighborsAndDampers()
-            // find particle neighbors and create spring dampers and line renderers there 
+        /// <summary>
+        /// Finds particle neighbors and creates spring dampers and line renderers there.
+        /// </summary>
+        private void SetNeighborsAndDampers()  
         {
-            foreach (Particle p in particleList)
+            foreach (var p in this.particleList)
             {
-                p.neighbors = new List<Particle>();
-                int particleNum = 0;
+                p.Neighbors = new List<Particle>();
+                var particleNum = 0;
 
-                for (int i = 0; i < particleList.Count; i++) // go through however many particles are in the list
+                for (var i = 0; i < this.particleList.Count; i++)
                 {
-                    if (particleList[i] == p) // if the index of a particle in the list equals the current particle
+                    // go through however many particles are in the list
+                    if (this.particleList[i] == p) 
                     {
-                        particleNum = i; // set that particle's number to be the same as that index
+                        // if the index of a particle in the list equals the current particle, set that particle's number to be the same as that index
+                        particleNum = i;
                     }
                 }
 
-                // Note: how many heights you have is how many times you iterate through widths. create spring dampers for every neighbor
-                if (particleNum + width < particleList.Count) // above neighbor
+                // Note: how many heights you have is how many times you iterate through widths. Create spring dampers for every neighbor
+                if (particleNum + Width < this.particleList.Count) 
                 {
-                    p.neighbors.Add(particleList[particleNum + width]); // add that particle to the neighbor list
-                    SpringDamper sd = new SpringDamper(
-                                          p,
-                                          particleList[particleNum + width],
-                                          springConstant,
-                                          dampingFactor,
-                                          restLength); // create a spring damper
-                    springDamperList.Add(sd); // add that spring damper to the spring damper list
-                    lineList.Add(createLineRenderers(sd)); // create a line renderer here and add it to the line list
+                    // above neighbor
+                    p.Neighbors.Add(this.particleList[particleNum + Width]); // add that particle to the neighbor list
+                    var sd = new SpringDamper(p, this.particleList[particleNum + Width], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
+                    this.springDamperList.Add(sd); // add that spring damper to the spring damper list
+                    this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
 
-                if ((particleNum + 1) % width > particleNum % width) // immediate right neighbor
+                if ((particleNum + 1) % Width > particleNum % Width) 
                 {
-                    p.neighbors.Add(particleList[particleNum + 1]); // add that particle to the neighbor list
-                    SpringDamper sd = new SpringDamper(
-                                          p,
-                                          particleList[particleNum + 1],
-                                          springConstant,
-                                          dampingFactor,
-                                          restLength); // create a spring damper
-                    springDamperList.Add(sd); // add that spring damper to the spring damper list
-                    lineList.Add(createLineRenderers(sd)); // create a line renderer here and add it to the line list
+                    // immediate right neighbor
+                    p.Neighbors.Add(this.particleList[particleNum + 1]); // add that particle to the neighbor list
+                    var sd = new SpringDamper(p, this.particleList[particleNum + 1], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
+                    this.springDamperList.Add(sd); // add that spring damper to the spring damper list
+                    this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
 
-                if (particleNum + width + 1 < particleList.Count && (particleNum + 1) % width > particleNum % width)
+                if (particleNum + Width + 1 < this.particleList.Count && (particleNum + 1) % Width > particleNum % Width)     
+                {
                     // top right neighbor
-                {
-                    p.neighbors.Add(particleList[particleNum + width + 1]); // add that particle to the neighbor list
-                    SpringDamper sd = new SpringDamper(
-                                          p,
-                                          particleList[particleNum + width + 1],
-                                          springConstant,
-                                          dampingFactor,
-                                          restLength); // create a spring damper
-                    springDamperList.Add(sd); // add that spring damper to the spring damper list
-                    lineList.Add(createLineRenderers(sd)); // create a line renderer here and add it to the line list
+                    p.Neighbors.Add(this.particleList[particleNum + Width + 1]); // add that particle to the neighbor list
+                    var sd = new SpringDamper(p, this.particleList[particleNum + Width + 1], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
+                    this.springDamperList.Add(sd); // add that spring damper to the spring damper list
+                    this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
 
-                if (particleNum + width - 1 < particleList.Count
-                    && (particleNum + width - 1) % width < particleNum % width) // top left neighbor
+                if (particleNum + Width - 1 < this.particleList.Count && (particleNum + Width - 1) % Width < particleNum % Width) 
                 {
-                    p.neighbors.Add(particleList[particleNum + width - 1]); // add that particle to the neighbor list
-                    SpringDamper sd = new SpringDamper(
-                                          p,
-                                          particleList[particleNum + width - 1],
-                                          springConstant,
-                                          dampingFactor,
-                                          restLength); // create a spring damper
-                    springDamperList.Add(sd); // add that spring damper to the spring damper list
-                    lineList.Add(createLineRenderers(sd)); // create a line renderer here and add it to the line list
+                    // top left neighbor
+                    p.Neighbors.Add(this.particleList[particleNum + Width - 1]); // add that particle to the neighbor list
+                    var sd = new SpringDamper(p, this.particleList[particleNum + Width - 1], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
+                    this.springDamperList.Add(sd); // add that spring damper to the spring damper list
+                    this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
             }
         }
 
-        public void setTriangles() // create triangles for aerodynamic force 
+        /// <summary>
+        /// Creates triangles for aerodynamic force.
+        /// </summary>
+        private void SetTriangles()  
         {
             // i = this particle
             // i + 1 = right
             // i + width = top
             // i + width - 1 = top left
-
-            for (int i = 0; i < particleList.Count; i++)
+            for (var i = 0; i < this.particleList.Count; i++)
             {
-                if (i % width != width - 1 && i < (width * height) - width) // bottom left triangle
+                if (i % Width != Width - 1 && i < (Width * Height) - Width) 
                 {
-                    Triangle tri = new Triangle(particleList[i], particleList[i + 1], particleList[i + width]);
-                        // (bottom, right, top)
-                    triangleList.Add(tri);
+                    // bottom left triangle
+                    var tri = new Triangle(this.particleList[i], this.particleList[i + 1], this.particleList[i + Width]); // (bottom, right, top)
+                    this.triangleList.Add(tri);
                 }
-                if (i % width != 0 && i < (width * height) - width) // top right triangle
+
+                if (i % Width != 0 && i < (Width * Height) - Width)
                 {
-                    Triangle tri = new Triangle(particleList[i], particleList[i + width - 1], particleList[i + width]);
-                        // (bottom, top left, top)
-                    triangleList.Add(tri);
+                    // top right triangle
+                    var tri = new Triangle(this.particleList[i], this.particleList[i + Width - 1], this.particleList[i + Width]); // (bottom, top left, top)
+                    this.triangleList.Add(tri);
                 }
             }
         }
 
-        public GameObject createLineRenderers(SpringDamper sd) // instantiate a line prefab 
+        /// <summary>
+        /// Creates line renderers.
+        /// </summary>
+        /// <param name="sd">
+        /// The spring damper.
+        /// </param>
+        /// <returns>
+        /// The <see cref="GameObject"/>.
+        /// </returns>
+        private GameObject CreateLineRenderers(SpringDamper sd) 
         {
-            GameObject lineGO =
-                    Instantiate(linePrefab, (sd.P1.Position + sd.P2.Position) / 2, new Quaternion()) as GameObject;
-                // use line prefab to draw from first particle to second particle
-            return lineGO;
+            // instantiate a line prefab
+            var lineGo = Instantiate(this.LinePrefab, (sd.P1.Position + sd.P2.Position) / 2, new Quaternion()) as GameObject; // use line prefab to draw from first particle to second particle
+            return lineGo;
         }
     }
 }
