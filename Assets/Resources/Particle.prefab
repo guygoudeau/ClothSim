@@ -90,13 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5b95b57262b184badb1bd5db6f035d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  acceleration: {x: 0, y: 0, z: 0}
-  force: {x: 0, y: 0, z: 0}
-  mass: 1
-  anchor: 0
-  neighbors: []
 --- !u!135 &135000011168453046
 SphereCollider:
   m_ObjectHideFlags: 1

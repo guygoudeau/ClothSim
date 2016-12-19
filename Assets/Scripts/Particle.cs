@@ -17,6 +17,7 @@ namespace Assets.Scripts
     /// </summary>
     public class Particle : MonoBehaviour
     {
+/*
         /// <summary>
         /// Initializes a new instance of the <see cref="Particle"/> class.
         /// </summary>
@@ -51,41 +52,161 @@ namespace Assets.Scripts
             this.Anchor = an;
             this.Neighbors = n;
         }
+*/
+
+        /// <summary>
+        /// The mass.
+        /// </summary>
+        private float mass;
+
+        /// <summary>
+        /// The force.
+        /// </summary>
+        private Vector3 force;
+
+        /// <summary>
+        /// The acceleration.
+        /// </summary>
+        private Vector3 acceleration;
+
+        /// <summary>
+        /// The velocity.
+        /// </summary>
+        private Vector3 velocity;
+
+        /// <summary>
+        /// The position.
+        /// </summary>
+        private Vector3 position;
+
+        /// <summary>
+        /// Determines whether anchor.
+        /// </summary>
+        private bool anchor;
+
+        /// <summary>
+        /// The list of neighbors.
+        /// </summary>
+        private List<Particle> neighbors;
 
         /// <summary>
         /// Gets or sets the mass.
         /// </summary>
-        public float Mass { get; set; }
+        // ReSharper disable once ConvertToAutoPropertyWhenPossible
+        public float Mass
+        {
+            get
+            {
+                return this.mass;
+            }
+
+            set
+            {
+                this.mass = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the force.
         /// </summary>
-        public Vector3 Force { get; set; }
+        // ReSharper disable once ConvertToAutoPropertyWhenPossible
+        public Vector3 Force
+        {
+            get
+            {
+                return this.force;
+            }
+
+            set
+            {
+                this.force = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the acceleration.
         /// </summary>
-        public Vector3 Acceleration { get; set; }
+        // ReSharper disable once ConvertToAutoProperty
+        public Vector3 Acceleration
+        {
+            get
+            {
+                return this.acceleration;
+            }
+
+            set
+            {
+                this.acceleration = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the velocity.
         /// </summary>
-        public Vector3 Velocity { get; set; }
+        // ReSharper disable once ConvertToAutoProperty
+        public Vector3 Velocity
+        {
+            get
+            {
+                return this.velocity;
+            }
+
+            set
+            {
+                this.velocity = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
-        public Vector3 Position { get; set; }
+        // ReSharper disable once ConvertToAutoProperty
+        public Vector3 Position
+        {
+            get
+            {
+                return this.position;
+            }
+
+            set
+            {
+                this.position = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether anchor.
         /// </summary>
-        public bool Anchor { get; set; }
+        // ReSharper disable once ConvertToAutoProperty
+        public bool Anchor
+        {
+            get
+            {
+                return this.anchor;
+            }
+
+            set
+            {
+                this.anchor = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the neighbors.
         /// </summary>
-        public List<Particle> Neighbors { get; set; }
+        // ReSharper disable once ConvertToAutoProperty
+        public List<Particle> Neighbors
+        {
+            get
+            {
+                return this.neighbors;
+            }
+
+            set
+            {
+                this.neighbors = value;
+            }
+        }
 
         /// <summary>
         /// Updates the particle's position.
@@ -95,7 +216,7 @@ namespace Assets.Scripts
         /// </returns>
         public Vector3 UpdateParticle()
         {
-            this.Acceleration = (1f / this.Mass) * this.Force;
+            this.Acceleration = (1f / this.mass) * this.Force;
             this.Velocity += this.Acceleration * Time.deltaTime;
             this.Position += this.Velocity * Time.deltaTime;
 
@@ -105,12 +226,21 @@ namespace Assets.Scripts
         /// <summary>
         /// Adds two forces.
         /// </summary>
-        /// <param name="force">
+        /// <param name="forceAdded">
         /// The force to be added.
         /// </param>
-        public void AddForce(Vector3 force)
+        public void AddForce(Vector3 forceAdded)
         {
-            this.Force += force;
+            this.force += forceAdded;
+        }
+
+        /// <summary>
+        /// The awake.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private void Awake()
+        {
+            this.mass = 1;
         }
     }
 }

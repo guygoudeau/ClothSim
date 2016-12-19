@@ -168,10 +168,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1086484402}
   m_HandleRect: {fileID: 2132073469}
   m_Direction: 0
-  m_MinValue: -5
+  m_MinValue: 0
   m_MaxValue: 5
   m_WholeNumbers: 0
-  m_Value: -5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1405,7 +1405,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1737882376}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 10
+  m_MaxValue: 5
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
@@ -1691,20 +1691,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9da6c7909f1e30479c7d70232ace8e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particleList: []
   particlePrefab: {fileID: 1000011545878124, guid: fce097bcf1d61e347b2f3b3aeffe9f42,
     type: 2}
   linePrefab: {fileID: 1000013911098634, guid: 263132a86bd75424e96fc745b7162d85, type: 2}
   lineMaterial: {fileID: 2100000, guid: 25d44887d8268f64d8706b42db2591ca, type: 2}
-  width: 8
-  height: 8
-  springConstant: 50
-  dampingFactor: 3
-  restLength: 2
-  gravity: 5
-  airVelocity: 0
-  breakingFactor: 0
-  airDensity: 1
-  dragCoefficient: 1
 --- !u!4 &1303388143
 Transform:
   m_ObjectHideFlags: 0
@@ -1909,7 +1900,6 @@ MonoBehaviour:
   restL: {fileID: 1164593638}
   grav: {fileID: 1788638636}
   windS: {fileID: 29669551}
-  breakF: {fileID: 266419325}
   clothSim: {fileID: 1303388142}
 --- !u!1 &1369251526
 GameObject:
@@ -2795,10 +2785,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 63044676}
   m_HandleRect: {fileID: 262386544}
   m_Direction: 0
-  m_MinValue: -10
-  m_MaxValue: 10
+  m_MinValue: 0
+  m_MaxValue: 5
   m_WholeNumbers: 0
-  m_Value: -10
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3256,7 +3246,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 345934677}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 5
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:

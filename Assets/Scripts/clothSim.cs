@@ -16,32 +16,31 @@ namespace Assets.Scripts
     /// The cloth simulation class.
     /// </summary>
     public class ClothSim : MonoBehaviour
-    { 
+    {
         /// <summary>
         /// The width of the particle grid.
         /// </summary>
-        [SerializeField]
-        private const int Width = 7;
+        private int width;
 
         /// <summary>
         /// The height of the particle grid.
         /// </summary>
-        [SerializeField]
-        private const int Height = 7;
+        private int height;
 
         /// <summary>
         /// The air density.
         /// </summary>
-        private const float AirDensity = 1;
+        private float airDensity;
 
         /// <summary>
         /// The drag coefficient.
         /// </summary>
-        private const float DragCoefficient = 1;
+        private float dragCoefficient;
 
         /// <summary>
         /// The particle list.
         /// </summary>
+        [SerializeField]
         // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private List<Particle> particleList;
 
@@ -83,14 +82,14 @@ namespace Assets.Scripts
         /// <summary>
         /// The spring constant.
         /// </summary>
-        [Range(0, 100)]
+        [Range(0, 5)]
         // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private float springConstant;
 
         /// <summary>
         /// The damping factor.
         /// </summary>
-        [Range(0, 10)]
+        [Range(0, 5)]
         // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private float dampingFactor;
 
@@ -104,17 +103,39 @@ namespace Assets.Scripts
         /// <summary>
         /// The gravity.
         /// </summary>
-        [Range(-10, 10)]
+        [Range(0, 5)]
         // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private float gravity;
 
         /// <summary>
         /// The air velocity.
         /// </summary>
-        [Range(-5, 5)]
+        [Range(0, 5)]
         // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private float airVelocity;
 
+        /// <summary>
+        /// The particle prefab.
+        /// </summary>
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private GameObject particlePrefab;
+
+        /// <summary>
+        /// The line prefab.
+        /// </summary>
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private GameObject linePrefab;
+
+        /// <summary>
+        /// The line material.
+        /// </summary>
+        [SerializeField]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
+        private Material lineMaterial;
+
+/*
         /// <summary>
         /// Initializes a new instance of the <see cref="ClothSim"/> class.
         /// </summary>
@@ -149,17 +170,11 @@ namespace Assets.Scripts
             this.restLength = rL;
             this.gravity = g;
             this.airVelocity = aV;
-            this.ParticlePrefab = pP;
-            this.LinePrefab = lP;
-            this.LineMaterial = lM;
-            this.particleList = new List<Particle>();
-            this.springDamperList = new List<SpringDamper>();
-            this.tempSpringDamperList = new List<SpringDamper>();
-            this.triangleList = new List<Triangle>();
-            this.tempTriangleList = new List<Triangle>();
-            this.lineList = new List<GameObject>();
-            this.tempLineList = new List<GameObject>();
+            this.particlePrefab = pP;
+            this.linePrefab = lP;
+            this.lineMaterial = lM;
         }
+*/
 
         /// <summary>
         /// Gets or sets the spring constant.
@@ -242,19 +257,15 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// Gets or sets the particle prefab.
+        /// The awake.
         /// </summary>
-        public GameObject ParticlePrefab { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line prefab.
-        /// </summary>
-        public GameObject LinePrefab { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line material.
-        /// </summary>
-        public Material LineMaterial { get; set; }
+        private void Awake()
+        {
+            this.springConstant = 3f;
+            this.dampingFactor = 1f;
+            this.restLength = 2f;
+            this.gravity = .5f;
+        }
 
         /// <summary>
         /// Handles actions that need to happen at program start.
@@ -262,8 +273,17 @@ namespace Assets.Scripts
         // ReSharper disable once UnusedMember.Local
         private void Start()
         {
-            // ReSharper disable once UnusedVariable
-            var clothSim = new ClothSim(this.SpringConstant, this.DampingFactor, this.RestLength, this.Gravity, this.AirVelocity, this.ParticlePrefab, this.LinePrefab, this.LineMaterial);
+            this.height = 7;
+            this.width = 7;
+            this.airDensity = 1;
+            this.dragCoefficient = 1;
+            this.particleList = new List<Particle>();
+            this.springDamperList = new List<SpringDamper>();
+            this.tempSpringDamperList = new List<SpringDamper>();
+            this.triangleList = new List<Triangle>();
+            this.tempTriangleList = new List<Triangle>();
+            this.lineList = new List<GameObject>();
+            this.tempLineList = new List<GameObject>();
 
             this.SpawnParticles();
             this.SetNeighborsAndDampers();
@@ -293,17 +313,13 @@ namespace Assets.Scripts
             var xPos = 0f; // for determining position of particles on x axis 
             var yPos = 0f; // for determining position of particles on y axis 
 
-            for (var i = 0; i < Height; i++)
+            for (var i = 0; i < this.height; i++)
             {
-                for (var j = 0; j < Width; j++)
+                for (var j = 0; j < this.width; j++)
                 {
-                    var particle = Instantiate(this.ParticlePrefab, new Vector3(xPos, yPos, 0), new Quaternion()) as GameObject; // spawn particle prefab
-                    if (particle != null)
-                    {
-                        // add that particle to the particle list
-                        this.particleList.Add(particle.GetComponent<Particle>());  
-                    }
-
+                    var particle = Instantiate(Resources.Load("Particle", typeof(Particle)), new Vector3(xPos, yPos, 0), new Quaternion()) as Particle; // spawn particle prefab
+                    this.particleList.Add(particle);
+                   
                     xPos += 2; // x margin of 2 between particles
                 }
 
@@ -312,7 +328,7 @@ namespace Assets.Scripts
             }
 
             this.particleList[this.particleList.Count - 1].Anchor = true; // set top right anchor
-            this.particleList[this.particleList.Count - Width].Anchor = true; // set top left anchor
+            this.particleList[this.particleList.Count - this.width].Anchor = true; // set top left anchor
         }
 
         /// <summary>
@@ -362,7 +378,7 @@ namespace Assets.Scripts
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (this.airVelocity != 0)
                 {
-                    t.AeroForce(AirDensity, DragCoefficient, this.airVelocity * Vector3.forward);
+                    t.AeroForce(this.airDensity, this.dragCoefficient, this.airVelocity * Vector3.forward);
                 }
             }
 
@@ -373,10 +389,11 @@ namespace Assets.Scripts
                 {
                     p.transform.position = p.UpdateParticle();
                 }
-                else
-                {
-                    p.Position = p.transform.position;
-                }
+
+                // else
+                // {
+                //    p.Position = p.transform.position;
+                // }
             }
 
             for (var i = 0; i < this.tempLineList.Count; i++) 
@@ -385,7 +402,7 @@ namespace Assets.Scripts
                 var line = this.tempLineList[i].GetComponent<LineRenderer>();
                 line.SetPosition(0, this.springDamperList[i].P1.Position);
                 line.SetPosition(1, this.springDamperList[i].P2.Position);
-                line.material = this.LineMaterial;
+                line.material = this.lineMaterial;
                 line.SetWidth(.2f, .2f);
             }
         }
@@ -411,16 +428,16 @@ namespace Assets.Scripts
                 }
 
                 // Note: how many heights you have is how many times you iterate through widths. Create spring dampers for every neighbor
-                if (particleNum + Width < this.particleList.Count) 
+                if (particleNum + this.width < this.particleList.Count) 
                 {
                     // above neighbor
-                    p.Neighbors.Add(this.particleList[particleNum + Width]); // add that particle to the neighbor list
-                    var sd = new SpringDamper(p, this.particleList[particleNum + Width], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
+                    p.Neighbors.Add(this.particleList[particleNum + this.width]); // add that particle to the neighbor list
+                    var sd = new SpringDamper(p, this.particleList[particleNum + this.width], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
                     this.springDamperList.Add(sd); // add that spring damper to the spring damper list
                     this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
 
-                if ((particleNum + 1) % Width > particleNum % Width) 
+                if ((particleNum + 1) % this.width > particleNum % this.width) 
                 {
                     // immediate right neighbor
                     p.Neighbors.Add(this.particleList[particleNum + 1]); // add that particle to the neighbor list
@@ -429,20 +446,20 @@ namespace Assets.Scripts
                     this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
 
-                if (particleNum + Width + 1 < this.particleList.Count && (particleNum + 1) % Width > particleNum % Width)     
+                if (particleNum + this.width + 1 < this.particleList.Count && (particleNum + 1) % this.width > particleNum % this.width)     
                 {
                     // top right neighbor
-                    p.Neighbors.Add(this.particleList[particleNum + Width + 1]); // add that particle to the neighbor list
-                    var sd = new SpringDamper(p, this.particleList[particleNum + Width + 1], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
+                    p.Neighbors.Add(this.particleList[particleNum + this.width + 1]); // add that particle to the neighbor list
+                    var sd = new SpringDamper(p, this.particleList[particleNum + this.width + 1], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
                     this.springDamperList.Add(sd); // add that spring damper to the spring damper list
                     this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
 
-                if (particleNum + Width - 1 < this.particleList.Count && (particleNum + Width - 1) % Width < particleNum % Width) 
+                if (particleNum + this.width - 1 < this.particleList.Count && (particleNum + this.width - 1) % this.width < particleNum % this.width) 
                 {
                     // top left neighbor
-                    p.Neighbors.Add(this.particleList[particleNum + Width - 1]); // add that particle to the neighbor list
-                    var sd = new SpringDamper(p, this.particleList[particleNum + Width - 1], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
+                    p.Neighbors.Add(this.particleList[particleNum + this.width - 1]); // add that particle to the neighbor list
+                    var sd = new SpringDamper(p, this.particleList[particleNum + this.width - 1], this.springConstant, this.dampingFactor, this.restLength); // create a spring damper
                     this.springDamperList.Add(sd); // add that spring damper to the spring damper list
                     this.lineList.Add(this.CreateLineRenderers(sd)); // create a line renderer here and add it to the line list
                 }
@@ -460,17 +477,17 @@ namespace Assets.Scripts
             // i + width - 1 = top left
             for (var i = 0; i < this.particleList.Count; i++)
             {
-                if (i % Width != Width - 1 && i < (Width * Height) - Width) 
+                if (i % this.width != this.width - 1 && i < (this.width * this.height) - this.width) 
                 {
                     // bottom left triangle
-                    var tri = new Triangle(this.particleList[i], this.particleList[i + 1], this.particleList[i + Width]); // (bottom, right, top)
+                    var tri = new Triangle(this.particleList[i], this.particleList[i + 1], this.particleList[i + this.width]); // (bottom, right, top)
                     this.triangleList.Add(tri);
                 }
 
-                if (i % Width != 0 && i < (Width * Height) - Width)
+                if (i % this.width != 0 && i < (this.width * this.height) - this.width)
                 {
                     // top right triangle
-                    var tri = new Triangle(this.particleList[i], this.particleList[i + Width - 1], this.particleList[i + Width]); // (bottom, top left, top)
+                    var tri = new Triangle(this.particleList[i], this.particleList[i + this.width - 1], this.particleList[i + this.width]); // (bottom, top left, top)
                     this.triangleList.Add(tri);
                 }
             }
@@ -488,7 +505,7 @@ namespace Assets.Scripts
         private GameObject CreateLineRenderers(SpringDamper sd) 
         {
             // instantiate a line prefab
-            var lineGo = Instantiate(this.LinePrefab, (sd.P1.Position + sd.P2.Position) / 2, new Quaternion()) as GameObject; // use line prefab to draw from first particle to second particle
+            var lineGo = Instantiate(this.linePrefab, (sd.P1.Position + sd.P2.Position) / 2, new Quaternion()) as GameObject; // use line prefab to draw from first particle to second particle
             return lineGo;
         }
     }
